@@ -10,6 +10,7 @@ use App\Http\Resources\NeighborhoodResource;
 use App\Models\City;
 use App\Models\CityNeighborhood;
 use App\Models\Neighborhood;
+use App\Models\Street;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
@@ -93,8 +94,8 @@ class CityController extends Controller
     public function storeNeighborhood(NeighborhoodStoreRequest $request)
     {
         $data = $request->validated();
-        $neighborhood = new Neighborhood();
 
+        $neighborhood = new Neighborhood();
         $neighborhood->bairro = $data['bairro'];
         $neighborhood->save();
 
@@ -103,7 +104,19 @@ class CityController extends Controller
         $cityNeighborhood->neighborhood_id = $neighborhood->id;
         $cityNeighborhood->save();
 
+        $this->storeCep($request->cep, $neighborhood->id);
+
         return new NeighborhoodResource($neighborhood);
+    }
+
+    private function storeCep($cep, $id)
+    {
+        foreach ($cep as $arr) {
+            $street = new Street();
+            $street->cep = $arr['cep'];
+            $street->neighborhood_id = $id;
+            $street->save();
+        }
     }
 
     private function getCityAndNeighborhoods($id)

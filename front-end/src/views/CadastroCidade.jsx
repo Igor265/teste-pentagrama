@@ -131,7 +131,7 @@ export default function CadastroCidade() {
                                 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 />
                             </div>
-                            {neighborhood && (
+                            {neighborhood && neighborhood.length > 0 && (
                                 <div className="col-span-6 sm:col-span-3">
                                     <label htmlFor="bairro" className="block text-sm font-medium text-gray-700">
                                         Bairro
